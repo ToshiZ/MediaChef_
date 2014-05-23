@@ -1,0 +1,226 @@
+﻿@using System.Runtime.Remoting.Messaging
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if (IE 9)]><html class="no-js ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="ru">
+ <!--<![endif]-->
+<head>
+    <!-- Meta Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Media Chef</title>
+    <meta name="description" content="Insert Your Site Description" />
+    <!-- Mobile Specifics -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
+    <!-- Mobile Internet Explorer ClearType Technology -->
+    <!--[if IEMobile]>  <meta http-equiv="cleartype" content="on">  <![endif]-->
+    <!-- Bootstrap -->
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Main Style -->
+    <link href="~/Content/css/main.css" rel="stylesheet">
+    <!-- Supersized -->
+    <link href="~/Content/css/supersized.css" rel="stylesheet">
+    <link href="~/Content/css/supersized.shutter.css" rel="stylesheet">
+    <!-- FancyBox -->
+    <link href="~/Content/css/fancybox/jquery.fancybox.css" rel="stylesheet">
+    <!-- Font Icons -->
+    <link href="~/Content/css/fonts.css" rel="stylesheet">
+    <!-- Shortcodes -->
+    <link href="~/Content/css/shortcodes.css" rel="stylesheet">
+    <!-- Responsive -->
+    <link href="~/Content/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="~/Content/css/responsive.css" rel="stylesheet">
+    <!-- Supersized -->
+    <link href="~/Content/css/supersized.css" rel="stylesheet">
+    <link href="~/Content/css/supersized.shutter.css" rel="stylesheet">
+    <!-- Google Font -->
+    <link href="~/Content/css/google-font.css" rel='stylesheet' type='text/css'>
+    <!-- mini upload -->
+    @if (Request.IsAuthenticated)
+    {
+        <link href="~/UploadSources/css/style.css" rel="stylesheet" />
+    }
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="#">
+    <link rel="apple-touch-icon" href="#">
+    <link rel="apple-touch-icon" sizes="114x114" href="#">
+    <link rel="apple-touch-icon" sizes="72x72" href="#">
+    <link rel="apple-touch-icon" sizes="144x144" href="#">
+    <!-- Modernizr -->
+    <script src="~/Scripts/js/modernizr.js"></script>
+</head>
+
+<body>
+    <!-- This section is for Splash Screen -->
+    <div class="ole">
+        <section id="jSplash">
+            <div id="circle"></div>
+        </section>
+    </div>
+    <!-- End of Splash Screen -->
+    <!-- Homepage Slider -->
+    <div id="home-slider">
+        <div class="overlay"></div>
+        <div class="slider-text">
+            <div id="slidecaption"></div>
+        </div>
+
+        <div class="control-nav">
+            <a id="prevslide" class="load-item"><i class="font-icon-arrow-simple-left"></i></a>
+            <a id="nextslide" class="load-item"><i class="font-icon-arrow-simple-right"></i></a>
+            <ul id="slide-list"></ul>
+
+            <a id="nextsection" href="#work"><i class="font-icon-arrow-simple-down"></i></a>
+        </div>
+    </div>
+    <!-- End Homepage Slider -->
+    <!-- Header -->
+    <header>
+        <section id="login">
+            @if (Request.IsAuthenticated)
+            {
+                <div style="margin-right: 10px; text-align: right">
+                    Здравствуйте, @Html.ActionLink(User.Identity.Name, "Manage", "Account", routeValues: null, htmlAttributes: new { @class = "username", title = "Управление" })!
+                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a>
+                    }
+                </div>
+            }
+        </section>
+
+        <div class="sticky-nav">
+            <a id="mobile-nav" class="menu-nav" href="#menu-nav"></a>
+
+            <div id="logo">
+                <a id="goUp" href="#home-slider" title="Brushed | Responsive One Page Template">Brushed Template</a>
+
+            </div>
+            <nav id="menu">
+                <ul id="menu-nav">
+                    <li class="current"><a href="#home-slider">Home</a></li>
+                    <li><a href="#work">Работы</a></li>
+                    @if (User.IsInRole("Admin") || User.IsInRole("User"))
+                    {
+                        <li><a href="#upload-html">Добавить файл</a></li>
+                        @*<li>@Html.ActionLink("Создать проект", "Editor", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "external"})</li>*@
+                        <li><a id="create-proj-but">Создать проект</a></li>
+                    }
+                    <li>
+                        @if (!Request.IsAuthenticated)
+                        {
+                            <a href="#contact">Вход</a>
+                        }
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </header>
+    <!-- End Header -->
+    <!-- Our Work Section -->
+    <div id="work" class="page">
+        <div class="container">
+            <!-- Title Page -->
+            <div class="row">
+                <div class="span12">
+                    <div class="title-page">
+                        <h2 class="title">Работы</h2>
+                        @*<h3 class="title-description">Check Out Our Projects on <a href="#">Dribbble</a>.</h3>*@
+                    </div>
+                </div>
+            </div>
+
+            <!-- End Title Page -->
+            <!-- Portfolio Projects -->
+            <div class="row">
+                <div class="span3">
+                    <!-- Filter -->
+                    <nav id="options" class="work-nav">
+                        <ul id="filters" class="option-set" data-option-key="filter">
+                            <li class="type-work">Категории</li>
+                            <li><a href="#filter" data-option-value="*" class="selected">Все</a></li>
+                            <li><a href="#filter" data-option-value=".design">Аудио</a></li>
+                            <li><a href="#filter" data-option-value=".photography">Фото</a></li>
+                            <li><a href="#filter" data-option-value=".video">Видео</a></li>
+                        </ul>
+                    </nav>
+                    <!-- End Filter -->
+
+                </div>
+                @RenderBody();
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Contact Section -->
+    @if (!Request.IsAuthenticated)
+    {
+        <div id="contact" class="page">
+            <div class="container">
+                <!-- Title Page -->
+                <div class="row">
+                    <div class="span12">
+                        <div class="title-page">
+                            <h2 class="title">@Html.ActionLink("Регистрация", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</h2>
+                            <h3 class="title-description">@Html.ActionLink("Выполнить вход", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- End Title Page -->
+                <!-- End Contact Form -->
+            </div>
+        </div>
+    }
+    <!-- End Contact Section -->
+    @{Html.RenderPartial("UploadWidget");}
+    <!-- Back To Top -->
+    <a id="back-to-top" href="#">
+        <i class="font-icon-arrow-simple-up"></i>
+    </a>
+    <!-- End Back to Top -->
+    <script src="~/Scripts/jquery-2.1.1.js"></script>
+    @*<@*script src="~/Scripts/js/jquery-ui-1.10.4.min.js">*@
+    <script src="~/Scripts/js/bootstrap.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/Scripts/js/supersized.3.2.7.min.js"></script>
+    <!-- Slider -->
+    <script src="~/Scripts/js/waypoints.js"></script>
+    <!-- WayPoints -->
+    <script src="~/Scripts/js/waypoints-sticky.js"></script>
+    <!-- Waypoints for Header -->
+    <script src="~/Scripts/js/jquery.isotope.js"></script>
+    <!-- Isotope Filter -->
+    <script src="~/Scripts/js/jquery.fancybox.pack.js"></script>
+    <!-- Fancybox -->
+    <script src="~/Scripts/js/jquery.fancybox-media.js"></script>
+    <!-- Fancybox for Media -->
+    <script src="~/Scripts/js/jquery.tweet.js"></script>
+    <!-- Tweet -->
+    <script src="~/Scripts/js/plugins.js"></script>
+    <!-- Contains: jPreloader, jQuery Easing, jQuery ScrollTo, jQuery One Page Navi -->
+    <script src="~/Scripts/js/main.js"></script>
+    <!-- Default JS -->
+    <!-- End Js -->
+    @if (Request.IsAuthenticated)
+    {
+        <!-- jQuery File Upload Dependencies -->
+        <script src="~/UploadSources/js/jquery.knob.js"></script>
+        <script src="~/UploadSources/js/jquery.ui.widget.js"></script>
+        <script src="~/UploadSources/js/jquery.iframe-transport.js"></script>
+        <script src="~/UploadSources/js/jquery.fileupload.js"></script>
+
+        <!-- Our main JS file -->
+        <script src="~/UploadSources/js/script.js"></script>
+    }
+</body>
+
+
+</html>

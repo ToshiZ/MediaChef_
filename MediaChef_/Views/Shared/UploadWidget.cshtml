@@ -1,0 +1,19 @@
+﻿@model MediaChef_.Models.MyFileModel
+<!-- Upload Section -->
+<div id="upload-html" class="page-alternate">
+    <div class="container">
+        @using (Html.BeginForm("UploadFile", "Upload", FormMethod.Post, new { id = "upload", enctype = "multipart/form-data" }))
+        {
+            <div id="drop">
+                Перетащить
+
+                <a>Выбрать</a>
+                @*<input type="file" name="upl" multiple />*@
+                @Html.TextBoxFor(m => m.MyFile, new { name = "upl", type = "file", multiple = "multiple" })
+            </div>
+            <ul>
+                <!-- The file uploads will be shown here -->
+            </ul>
+        }
+    </div>
+</div>
