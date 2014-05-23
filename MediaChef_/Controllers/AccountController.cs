@@ -14,7 +14,7 @@ using MediaChef_.Models;
 namespace MediaChef_.Controllers
 {
     [Authorize]
-    [InitializeSimpleMembership]
+    //[InitializeSimpleMembership]
     public class AccountController : Controller
     {
         //

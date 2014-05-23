@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using MediaChef_.Filters;
+using System.Web;
 using System.Web.Mvc;
 
 namespace MediaChef_
@@ -8,6 +9,7 @@ namespace MediaChef_
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new InitializeSimpleMembershipAttribute());
         }
     }
 }
