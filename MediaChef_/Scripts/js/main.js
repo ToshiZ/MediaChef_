@@ -400,7 +400,7 @@ BRUSHED.slider();
 DRAGGABLE
 ================================================== */
     BRUSHED.draggable = function() {
-        $('.draggable1').draggable();
+        $('.draggable').draggable();
     }
     /* ==================================================
        Slider Options

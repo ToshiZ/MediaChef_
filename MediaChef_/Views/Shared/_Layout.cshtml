@@ -108,8 +108,8 @@
                     @if (User.IsInRole("Admin") || User.IsInRole("User"))
                     {
                         <li><a href="#upload-html">Добавить файл</a></li>
-                        @*<li>@Html.ActionLink("Создать проект", "Editor", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "external"})</li>*@
-                        <li><a id="create-proj-but">Создать проект</a></li>
+                        <li>@Html.ActionLink("Создать проект", "Editor", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "external"})</li>
+                        @*<li><a id="create-proj-but">Создать проект</a></li>*@
                     }
                     <li>
                         @if (!Request.IsAuthenticated)
