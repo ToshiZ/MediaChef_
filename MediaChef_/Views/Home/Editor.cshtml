@@ -119,16 +119,42 @@
     </header>
     <!-- End Header -->
     <!-- Our Work Section -->
-    <div id="work" class="page">
-        <div class="container">
-
-            <!-- Portfolio Projects -->
-            <div class="row">
-                @{Html.RenderPartial("FileList");}
-            </div>
+    <div id="work"  class="page">
+        <div  class="container">
+            <div class="span9">
+                  @{Html.RenderPartial("FileList");}                  
+            </div>            
         </div>
     </div>
+    <a id="prewatch-button" class="button button-large" href="#prewatch">Просмотр</a>
 
+    <div id="prewatch" class="page-alternate">
+        <div class="container">
+            <!-- Title Page -->
+            @*<div class="row">
+                <div class="span12">
+                    <div class="title-page">
+                        <h2 class="title">Get in Touch</h2>
+                        <h3 class="title-description">We’re currently accepting new client projects. We look forward to serving you.</h3>
+                    </div>
+                </div>
+            </div>*@
+            <!-- End Title Page -->
+            <!-- Contact Form -->
+            <div class="row">
+                <div class="span9">
+
+                    <canvas id="canvas-prewatch" class="canvas"></canvas>
+
+                </div>
+
+
+            </div>
+            <!-- End Contact Form -->
+        </div>
+    </div>
+    <!-- End Contact Section -->
+    <!-- UPLOAD-->
     @{ Html.RenderPartial("UploadWidget"); }
 
     <!-- Back To Top -->

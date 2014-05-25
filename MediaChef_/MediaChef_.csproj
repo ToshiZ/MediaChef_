@@ -200,6 +200,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\bootstrap-responsive.min.css" />
+    <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\fancybox\blank.gif" />
+    <Content Include="Content\css\fancybox\fancybox_loading.gif" />
+    <Content Include="Content\css\fancybox\fancybox_overlay.png" />
+    <Content Include="Content\css\fancybox\fancybox_sprite.png" />
+    <Content Include="Content\css\fancybox\jquery.fancybox.css" />
+    <Content Include="Content\css\fonts.css" />
+    <Content Include="Content\css\fonts\Icons.svg" />
+    <Content Include="Content\css\google-font.css" />
+    <Content Include="Content\css\main.css" />
+    <Content Include="Content\css\responsive.css" />
+    <Content Include="Content\css\shortcodes.css" />
+    <Content Include="Content\css\supersized.css" />
+    <Content Include="Content\css\supersized.shutter.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -256,6 +271,11 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Content\css\fancybox\Thumbs.db" />
+    <Content Include="Content\css\fonts\.DS_Store" />
+    <Content Include="Content\css\fonts\Icons.eot" />
+    <Content Include="Content\css\fonts\Icons.ttf" />
+    <Content Include="Content\css\fonts\Icons.woff" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\editor-script.js" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />

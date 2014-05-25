@@ -1,4 +1,5 @@
-jQuery(function($){
+
+jQuery(function ($) {
 
 var BRUSHED = window.BRUSHED || {};
 

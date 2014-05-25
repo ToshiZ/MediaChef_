@@ -17,7 +17,7 @@ namespace MediaChef_.Controllers
 
             
                 if (User.IsInRole("Admin"))
-                    return View("IndexAdmin");
+                    return View("Editor");
                 else
                     if(User.IsInRole("User"))
                         return View("IndexUser");
