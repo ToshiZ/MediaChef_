@@ -494,7 +494,10 @@ header .sticky-nav.stuck {
 	left: 0;
 	z-index: 1001;
 }
-
+/*canvas {  
+  width: 100%;
+  height: 100%;
+}*/
 header #logo {
 	color: #FFFFFF;
 	float: left;
