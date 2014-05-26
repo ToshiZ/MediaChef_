@@ -24,13 +24,17 @@ jQuery(document).ready(function ($) {
         $(this).attr('time-start', pos);
         $(this).find('span').text(pos);
     });
-    $('.draggable.video, .draggable.design').each(function () {
+    //var myVideoPlayer = document.getElementById('video_player');
+   // myVideoPlayer.addEventListener('loadedmetadata', function () {
+        //console.log(videoPlayer.duration);
+   // });
+    //$('.draggable.video, .draggable.design').each(function () {
         //var dur = $(this)[0].duration;
         //alert(dur);
-        alert(parseInt($(this).get(0).duration));
+        //alert(parseInt($(this).get(0).duration));
 
 
-    });
+   // });
 
 
                
