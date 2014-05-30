@@ -7,14 +7,17 @@
             case "video":
                 {
                             <!-- Item Project and Filter Name -->
-    <li class="item-thumbs span3 video draggable" time-start="" time-end="">
+    <li class="item-thumbs span3 video draggable droppable" data-time-start="" data-time-end="">
         <!-- Fancybox Media - Gallery Enabled - Title - Link to Video -->
         <a class="hover-wrap fancybox-media" data-fancybox-group="video" title="@b.Name" href="~/@b.Path">
-            <span class="overlay-img"></span>
-            <span class="overlay-img-thumb font-icon-plus"></span>
+            @*<span class="overlay-img"></span>*@
+
+            @*<span class="overlay-img-thumb font-icon-plus"></span>*@
+            <span class="time-counter"></span><br>
+            <span class="merge-time"></span>
         </a>
         <!-- Thumb Image and Description -->
-        <video controls preload="metadata" width=270 height=189>
+        <video controls="controls" width=270 height=189 preload="metadata">
             <source src="@b.Path" type="@b.TypeMime" />
             Your browser does not support the video tag.
         </video>
@@ -26,11 +29,14 @@
             case "image":
                 {
                             <!-- Item Project and Filter Name -->
-    <li class="item-thumbs span3 photography draggable" time-start="" time-end="">
+    <li class="item-thumbs span3 photography draggable droppable" data-time-start="" data-time-end="">
         <!-- Fancybox - Gallery Enabled - Title - Full Image -->
         <a class="hover-wrap fancybox" data-fancybox-group="gallery" title="@b.Name" href="~/@b.Path">
-            <span class="overlay-img"></span>
-            <span class="overlay-img-thumb font-icon-plus"></span>
+            @*<span class="overlay-img"></span>*@
+
+            @*<span class="overlay-img-thumb font-icon-plus"></span>*@
+            <span class="time-counter"></span><br>
+            <span class="merge-time"></span>
         </a>
         <!-- Thumb Image and Description -->
         <img src="~/@b.Path" alt="">
@@ -40,22 +46,31 @@
                 }
             case "audio":
                 {
-                            <!-- Item Project and Filter Name -->
-    <li class="item-thumbs span3 design draggable" time-start="" time-end="">
+                   
+                        <!-- Item Project and Filter Name -->
+    <li class="item-thumbs span3 design draggable droppable" data-time-start="" data-time-end="">
+                           
         <!-- Fancybox - Gallery Enabled - Title - Full Image -->
         <a class="hover-wrap fancybox" data-fancybox-group="gallery" title="@b.Name" href="~/@b.Path">
             @*<span class="overlay-img"></span>*@
             @* <span class="overlay-img-thumb font-icon-plus"></span>*@
             @b.Name
-            <span class="time-counter"></span>
+            <span class="time-counter"></span><br>
+            <span class="merge-time"></span>
         </a>
         <!-- Thumb Image and Description -->
         @*<a href="~/@b.Path">@b.Name</a>*@
         <img src="~/Images/img/work/thumbs/image-02.jpg" title="@b.Name">
-        <audio controls preload="metadata" style="width: 270px">
-            <source src="@b.Path" type="@b.TypeMime" />
-        </audio>
-    </li>
+        
+            <audio controls="controls" style="width: 270px" preload="metadata">
+                <source src="@b.Path" type="@b.TypeMime" />
+            </audio>
+        
+
+
+                    </li>
+
+
                             <!-- End Item Project -->
                     break;
                 }
