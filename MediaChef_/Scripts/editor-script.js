@@ -15,7 +15,7 @@ jQuery(document).ready(function ($) {
         stack: '.draggable',
         drag: function () {
             positionTmp = $(this).offset().left/12;
-            $(this).attr('data-time-start', positionTmp);
+            $(this).data('time-start', positionTmp);
             $(this).find('.time-counter').text(positionTmp);
         }
     });
@@ -38,7 +38,7 @@ jQuery(document).ready(function ($) {
                 mergeT = draggableElement.data('time-end') * 12 + draggableElement.data('time-start') - $(this).data('time-start');
                // alert('4');
             }
-            draggableElement.find('.merge-time').text(mergeT.toFixed(2));
+            draggableElement.find('.merge-time').text(mergeT);
             //alert('5');
         },
         out: function (event, ui) {        
@@ -47,15 +47,15 @@ jQuery(document).ready(function ($) {
   
   // назначает положение объектов
     $('.draggable').each(function () {
-        var pos = ($(this).offset().left / 12).toFixed(3); 
-        $(this).attr('data-time-start', pos);
+        var pos = ($(this).offset().left / 12); 
+        $(this).data('time-start', pos);
         $(this).find('span').text(pos);
     });
     
   
     $('video, audio').each(function () {
         $(this).on('loadedmetadata', function () {
-            var dur = $(this)[0].duration.toFixed(3);
+            var dur = $(this)[0].duration;
             $(this).parent('li').attr('data-time-end', dur);
 
             $(this).parent('li').width(parseInt(dur*12));
@@ -91,29 +91,126 @@ jQuery(document).ready(function ($) {
            // context.drawImage(video, 0, 0);                 
         }    */
         var mediaQueue = [];
+       // var nowPlaying;
 
-        $('#prewatch-button').click(function () {
-            // video.play();
-           
+        //$('#prewatch-button').click(function () {
+        //    // video.play();
+        //    nowPlaying = 0;
+        //    $('video, audio').each(function (i) {
+        //        var startTime = $(this).parent('li').data('time-start');
+        //        mediaQueue[i] = $(this).get(0);
+        //        setTimeout(function () {
+        //            mediaQueue[i].play();                    
+        //            if (mediaQueue[i].tagName != 'AUDIO') {
+        //                draw(mediaQueue[i]);
+        //            }
+        //        }, startTime * 1000);
+               
+        //    });    
+        //});
+
+        $('#prewatch-button').click(playByTimer);
+        function playByTimer()
+        {
+            //nowPlaying = 0;
+            var startTime = [];
+            var start = new Date().getTime(),
+                timeCount = 0,
+                real,
+                offset = 0,
+                dif = 0;
+            
             $('video, audio').each(function (i) {
-                var tm = $(this).parent('li').data('time-start');
-                mediaQueue[i] = $(this).get(0);
-                setTimeout(function () { mediaQueue[i].play(); }, tm * 1000);
-                if (mediaQueue[i].tagName != 'AUDIO') {                   
+
+              
+                startTime[i] = $(this).parent('li').data('time-start');
+                mediaQueue[i] = $(this);
+            });
+            //startTime.sort();
+            mediaQueue.sort(function (a, b) {
+                if (a.parent('li').data('time-start') > b.parent('li').data('time-start'))
+                    return 1;
+                if (a.parent('li').data('time-start') < b.parent('li').data('time-start'))
+                    return -1;
+                return 0;
+            });
+            startTime.sort();
+            //alert('1');
+            var str1 = '';
+            //    str2 = '';
+            //startTime.forEach(function (item,i) {
+            //    str1 += item + " ";
+            //});
+            //alert('2');
+            //alert(str1);
+            //mediaQueue.forEach(function (item,i) {
+            //    str2 += item.parent('li').data('time-start') + " ";
+            //});
+            //alert(str1);
+            //alert(str2);
+
+            startTime.forEach(function (item, i) {                
+                if(item == startTime[i+1])
+                {
+                    offset++;
+                    alert(offset);
+                    return;
+                }
+                else
+                {
+                    var nowPlaying = mediaQueue.filter(function (element, index) { return (index <= i && index >= i - offset);});
+                    alert(nowPlaying);
+                    offset = 0;
+                    real = new Date().getTime();
+                    dif = real - start;
+                    setTimeout(function () {
+                        nowPlaying.forEach(function (it) {
+                            it.get(0).play();
+                        });
+                    }, item * 1000 - dif);
+                }
+            });
+            
+            //alert('1');
+            //alert(startTime);
+            //alert(arr);
+            //alert(real);
+            //alert(start);
+            //alert(dif);
+            //alert(str1);
+           
+            setTimeout(function () {
+                mediaQueue[i].play();
+                if (mediaQueue[i].tagName != 'AUDIO') {
                     draw(mediaQueue[i]);
                 }
-            });    
-        });
-
+            }, startTime * 1000);
+        }
         function draw(media) {
-           // if (media.paused || media.ended) return false;
-            context.globalAlpha = 0.5;
+            if (media.paused || media.ended) {
+                alert('end');
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                nowPlaying--;
+                return false;
+            }
+            if (nowPlaying > 1)
+                context.globalAlpha = 0.5;
+            else
+                context.globalAlpha = 1;
             // $('video').each(function () {
            // if (!media.paused || !media.ended)
                 context.drawImage(media, 0, 0);
-           // });
-            setTimeout(draw, 20, 'media');
+            // });
+                nowPlaying++;
+            setTimeout(draw, 20, media);
             // context.drawImage(video, 0, 0);                 
+        }
+        function sortByTimeStart(a,b){
+            if(a.parent('li').data('time-start') > b.parent('li').data('time-start'))
+                return 1;
+            if (a.parent('li').data('time-start') < b.parent('li').data('time-start'))
+                return -1;
+            return 0;
         }
     });    
 
