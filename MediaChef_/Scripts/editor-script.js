@@ -110,8 +110,7 @@ jQuery(document).ready(function ($) {
         //});
 
         $('#prewatch-button').click(playByTimer);
-        function playByTimer()
-        {
+        function playByTimer () {
             //nowPlaying = 0;
             var startTime = [];
             var start = new Date().getTime(),
@@ -126,7 +125,7 @@ jQuery(document).ready(function ($) {
                 startTime[i] = $(this).parent('li').data('time-start');
                 mediaQueue[i] = $(this);
             });
-            //startTime.sort();
+
             mediaQueue.sort(function (a, b) {
                 if (a.parent('li').data('time-start') > b.parent('li').data('time-start'))
                     return 1;
@@ -134,32 +133,19 @@ jQuery(document).ready(function ($) {
                     return -1;
                 return 0;
             });
-            startTime.sort();
-            //alert('1');
-            var str1 = '';
-            //    str2 = '';
-            //startTime.forEach(function (item,i) {
-            //    str1 += item + " ";
-            //});
-            //alert('2');
-            //alert(str1);
-            //mediaQueue.forEach(function (item,i) {
-            //    str2 += item.parent('li').data('time-start') + " ";
-            //});
-            //alert(str1);
-            //alert(str2);
+            startTime.sort();            
 
             startTime.forEach(function (item, i) {                
                 if(item == startTime[i+1])
                 {
                     offset++;
-                    alert(offset);
                     return;
                 }
                 else
                 {
-                    var nowPlaying = mediaQueue.filter(function (element, index) { return (index <= i && index >= i - offset);});
-                    alert(nowPlaying);
+                    var nowPlaying = mediaQueue.filter(function (element, index) {
+                        return (index <= i && index >= i - offset);
+                    });
                     offset = 0;
                     real = new Date().getTime();
                     dif = real - start;
@@ -167,7 +153,9 @@ jQuery(document).ready(function ($) {
                         nowPlaying.forEach(function (it) {
                             it.get(0).play();
                         });
-                    }, item * 1000 - dif);
+                    }, item * 1000 - dif - timeCount);
+                    timeCount += item;
+                    alert(timeCount);
                 }
             });
             
@@ -179,12 +167,12 @@ jQuery(document).ready(function ($) {
             //alert(dif);
             //alert(str1);
            
-            setTimeout(function () {
-                mediaQueue[i].play();
-                if (mediaQueue[i].tagName != 'AUDIO') {
-                    draw(mediaQueue[i]);
-                }
-            }, startTime * 1000);
+            //setTimeout(function () {
+            //    mediaQueue[i].play();
+            //    if (mediaQueue[i].tagName != 'AUDIO') {
+            //        draw(mediaQueue[i]);
+            //    }
+            //}, startTime * 1000);
         }
         function draw(media) {
             if (media.paused || media.ended) {
