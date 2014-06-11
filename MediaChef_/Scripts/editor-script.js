@@ -65,6 +65,7 @@ jQuery(document).ready(function ($) {
         canvas.css("height", page_h);
       
         var mediaQueue = [];
+        var contexts = [];
         var playingCount;
         var drawTimeOuts = [];
 
@@ -119,19 +120,27 @@ jQuery(document).ready(function ($) {
                             it.get(0).play();
                             playingCount++;
                             context.globalAlpha = (playingCount > 1) ? 0.5 : 1;
-                            if (playingCount > 1) {
+                          //  if (playingCount > 1) {
+                                var mId = it.attr('id');
+
                                 $('<canvas>').attr({
-                                    id: it.attr('id')
+                                    id: mId
                                 }).css({
                                     width: page_w + 'px',
                                     height: page_h + 'px',
-                                    position: 'absolute',
-                                   // top: 'inherit',
-                                    left: '0px'
-                                }).appendTo('#prewatch');
-                            }
+                                     position: 'absolute',
+                                     left: '0px',
+                                     opacity: '0.5'
+                                }).appendTo('#prewatch')                                   
+
+                                var canv = $("canvas[id=" + mId + "]");
+                                canv[0].width = page_w;
+                                canv[0].height = page_h;
+                                console.log(canv[0].tagName + " " + canv[0].height)
+                                contexts[mId] = canv[0].getContext('2d');
+                                //contexts[mId].globalAlpha = 0.5;
+                           // }
                             draw(nowPlaying);
-                          //  $('#test').text("count  " + playingCount);
                             timeCount += item * 1000;
                         });
                     }, item * 1000 - dif - timeCount);                    
@@ -139,12 +148,9 @@ jQuery(document).ready(function ($) {
             });
         }
             
-        function draw(media) {
-           // media.forEach(function (m, i) {
-                //m.get(0).addEventListener('ended', function () {    
+        function draw(media) {         
             if (media[0][0].paused || media[0][0].ended) {
-                    context.clearRect(0, 0, canvas.width, canvas.height);                
-                   // $('#test').text("count  " + playingCount);                   
+                    context.clearRect(0, 0, canvas.width, canvas.height);         
                     media.forEach(function (m) {
                         clearTimeout(drawTimeOuts[m.attr('id')]);
                         console.log(m.attr('id'));
@@ -152,13 +158,15 @@ jQuery(document).ready(function ($) {
                     playingCount-=media.length;
                     context.globalAlpha = (playingCount > 1) ? 0.5 : 1;
                     console.log("count  " + playingCount);
-                  //  $('#test').text("count  " + playingCount + "num  " + num);
                     return false;
-                }
-           // });
-            
+                }            
             media.forEach(function (m, it) {
-                context.drawImage(m[0], 0, 0, 960, 768);
+              //  if (playingCount > 1) {
+                   // context.clearRect(0, 0, 960, 768);
+                    contexts[m.attr('id')].drawImage(m[0], 0, 0, 960, 768);
+              //  }
+               // else
+                //    context.drawImage(m[0], 0, 0, 960, 768);
                 console.log("count  " + playingCount);
                 drawTimeOuts[m.attr('id')] = setTimeout(draw, 20, media);
             });            
