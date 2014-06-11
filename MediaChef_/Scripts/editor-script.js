@@ -52,18 +52,21 @@ jQuery(document).ready(function ($) {
         $(this).find('span').text(positionTmp);
     });   
   
-    $('video, audio').each(function () {
-        $(this).on('loadedmetadata', function () {
-            var dur = $(this)[0].duration;
-            $(this).parent('li').attr('data-time-end', dur);
-           // $(this).parent('li').width(parseInt(dur*12));
-            });            
-    }); 
+    //$('video, audio').each(function () {
+    //    $(this).on('loadedmetadata', function () {
+    //        var dur = $(this)[0].duration;
+    //        $(this).parent('li').attr('data-time-end', dur);
+    //       // $(this).parent('li').width(parseInt(dur*12));
+    //        });            
+    //}); 
         canvas[0].width = page_w;
-        canvas[0].height = page_h;  
+        canvas[0].height = page_h;
+        canvas.css("width", page_w);
+        canvas.css("height", page_h);
       
         var mediaQueue = [];
         var playingCount;
+        var drawTimeOuts = [];
 
         $('#prewatch-button').click(playByTimer);
 
@@ -80,11 +83,11 @@ jQuery(document).ready(function ($) {
                 dif = 0;
             playingCount = 0;
             
-            $('video, audio, img').each(function (i) {
+            $('video, audio').each(function (i) {
                 startTime[i] = $(this).parent('li').attr('data-time-start');
                 mediaQueue[i] = $(this);
             });
-
+            //alert('s');
             mediaQueue.sort(function (a, b) {
                 if (a.parent('li').attr('data-time-start') > b.parent('li').attr('data-time-start'))
                     return 1;
@@ -92,7 +95,9 @@ jQuery(document).ready(function ($) {
                     return -1;
                 return 0;
             });
-            startTime.sort();            
+            startTime.sort();
+           // alert(startTime);
+          // alert('s');
 
             startTime.forEach(function (item, i) {                
                 if(item == startTime[i+1])
@@ -114,30 +119,48 @@ jQuery(document).ready(function ($) {
                             it.get(0).play();
                             playingCount++;
                             context.globalAlpha = (playingCount > 1) ? 0.5 : 1;
-                           // if()
+                            if (playingCount > 1) {
+                                $('<canvas>').attr({
+                                    id: it.attr('id')
+                                }).css({
+                                    width: page_w + 'px',
+                                    height: page_h + 'px',
+                                    position: 'absolute',
+                                   // top: 'inherit',
+                                    left: '0px'
+                                }).appendTo('#prewatch');
+                            }
                             draw(nowPlaying);
-                            $('#test').text("it  " + item * 1000 + "dif  " + dif + "time   " + timeCount);
+                          //  $('#test').text("count  " + playingCount);
                             timeCount += item * 1000;
                         });
                     }, item * 1000 - dif - timeCount);                    
                 }
             });
         }
-        var drawTimeOuts = [];       
+            
         function draw(media) {
-            media.forEach(function(m){
-                m.get(0).addEventListener('ended', function () {
-                    clearTimeout(drawTimeOuts[m.parent('li').attr('data-time-start')]);
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    playingCount--;
+           // media.forEach(function (m, i) {
+                //m.get(0).addEventListener('ended', function () {    
+            if (media[0][0].paused || media[0][0].ended) {
+                    context.clearRect(0, 0, canvas.width, canvas.height);                
+                   // $('#test').text("count  " + playingCount);                   
+                    media.forEach(function (m) {
+                        clearTimeout(drawTimeOuts[m.attr('id')]);
+                        console.log(m.attr('id'));
+                    });
+                    playingCount-=media.length;
                     context.globalAlpha = (playingCount > 1) ? 0.5 : 1;
-                });
-            });
+                    console.log("count  " + playingCount);
+                  //  $('#test').text("count  " + playingCount + "num  " + num);
+                    return false;
+                }
+           // });
             
             media.forEach(function (m, it) {
-                context.drawImage(m[0], 0, 0);
-                $('#test').text(" media  " + m + "count  " + playingCount );
-                drawTimeOuts[m.parent('li').attr('data-time-start')] = setTimeout(draw, 20, media);
+                context.drawImage(m[0], 0, 0, 960, 768);
+                console.log("count  " + playingCount);
+                drawTimeOuts[m.attr('id')] = setTimeout(draw, 20, media);
             });            
         }        
     });    

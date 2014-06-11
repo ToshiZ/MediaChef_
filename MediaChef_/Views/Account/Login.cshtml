@@ -12,7 +12,6 @@
 </hgroup>
 
 <section id="loginForm">
-<h2>Используйте для входа локальную учетную запись.</h2>
 @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
@@ -41,11 +40,6 @@
         @Html.ActionLink("Зарегистрируйтесь", "Register"), если у вас нет учетной записи.
     </p>
 }
-</section>
-
-<section class="social" id="socialLoginForm">
-    <h2>Используйте для входа другую службу.</h2>
-    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
 </section>
 
 @section Scripts {
