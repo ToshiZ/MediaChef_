@@ -1,4 +1,5 @@
-$(function () {
+jQuery.noConflict();
+jQuery(document).ready(function ($) {
 
     var ul = $('#upload ul');
     

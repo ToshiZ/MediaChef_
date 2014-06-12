@@ -17,7 +17,7 @@
             <span class="merge-time"></span>
         </a>
         <!-- Thumb Image and Description -->
-        <video id="@b.GetHashCode()" controls="controls" width=270 height=189 preload="metadata">
+        <video id="@b.GetHashCode()" class="project-item" controls="controls" width=270 height=189 preload="metadata">
             <source src="@b.Path" type="@b.TypeMime" />
             Your browser does not support the video tag.
         </video>
@@ -39,7 +39,7 @@
             <span class="merge-time"></span>
         </a>
         <!-- Thumb Image and Description -->
-        <img id="@b.GetHashCode()" src="~/@b.Path" alt="">
+        <img id="@b.GetHashCode()" class="project-item" src="~/@b.Path" alt="">
     </li>
                             <!-- End Item Project -->
                     break;
@@ -60,17 +60,12 @@
         </a>
         <!-- Thumb Image and Description -->
         @*<a href="~/@b.Path">@b.Name</a>*@
-        <img id="@b.GetHashCode()" src="~/Images/img/work/thumbs/image-02.jpg" title="@b.Name">
+        <img  src="~/Images/img/work/thumbs/image-02.jpg" title="@b.Name">
         
-            <audio controls="controls" style="width: 270px" preload="metadata">
-                <source src="@b.Path" type="@b.TypeMime" />
-            </audio>
-        
-
-
+        <audio id="@b.GetHashCode()" class="project-item" controls="controls" style="width: 270px" preload="metadata">
+            <source src="@b.Path" type="@b.TypeMime" />
+        </audio>     
                     </li>
-
-
                             <!-- End Item Project -->
                     break;
                 }
