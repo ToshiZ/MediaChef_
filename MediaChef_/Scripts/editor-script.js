@@ -65,6 +65,7 @@ jQuery(document).ready(function ($) {
         canvas.css("height", page_h);
       
         var mediaQueue = [];
+        var canvases = [];
         var contexts = [];
         var playingCount;
         var drawTimeOuts = [];
@@ -117,29 +118,24 @@ jQuery(document).ready(function ($) {
 
                     timeOuts[i] = setTimeout(function () {
                         nowPlaying.forEach(function (it) {
-                            it.get(0).play();
-                            playingCount++;
-                            context.globalAlpha = (playingCount > 1) ? 0.5 : 1;
-                          //  if (playingCount > 1) {
-                                var mId = it.attr('id');
+                            it[0].play();
+                            playingCount++;                          
+                            var mId = it.attr('id');
 
-                                $('<canvas>').attr({
-                                    id: mId
-                                }).css({
-                                    width: page_w + 'px',
-                                    height: page_h + 'px',
-                                     position: 'absolute',
-                                     left: '0px',
-                                     opacity: '0.5'
-                                }).appendTo('#prewatch')                                   
+                            $('<canvas>').attr({
+                                id: mId
+                            }).css({
+                                width: page_w + 'px',
+                                height: page_h + 'px',
+                                    position: 'absolute',
+                                    left: '0px'                                     
+                            }).appendTo('#prewatch')                                   
 
-                                var canv = $("canvas[id=" + mId + "]");
-                                canv[0].width = page_w;
-                                canv[0].height = page_h;
-                                console.log(canv[0].tagName + " " + canv[0].height)
-                                contexts[mId] = canv[0].getContext('2d');
-                                //contexts[mId].globalAlpha = 0.5;
-                           // }
+                            canvases[mId] = $("canvas[id=" + mId + "]");
+                            canvases[mId][0].width = page_w;
+                            canvases[mId][0].height = page_h; 
+                            contexts[mId] = canvases[mId][0].getContext('2d');
+
                             draw(nowPlaying);
                             timeCount += item * 1000;
                         });
@@ -150,24 +146,17 @@ jQuery(document).ready(function ($) {
             
         function draw(media) {         
             if (media[0][0].paused || media[0][0].ended) {
-                    context.clearRect(0, 0, canvas.width, canvas.height);         
-                    media.forEach(function (m) {
-                        clearTimeout(drawTimeOuts[m.attr('id')]);
-                        console.log(m.attr('id'));
+               // context.clearRect(0, 0, 960, 768);
+                media.forEach(function (m) {
+                    clearTimeout(drawTimeOuts[m.attr('id')]);
+                    canvases[m.attr('id')].detach();
                     });
-                    playingCount-=media.length;
-                    context.globalAlpha = (playingCount > 1) ? 0.5 : 1;
-                    console.log("count  " + playingCount);
-                    return false;
-                }            
+                playingCount-=media.length;    
+                return false;
+            }
             media.forEach(function (m, it) {
-              //  if (playingCount > 1) {
-                   // context.clearRect(0, 0, 960, 768);
-                    contexts[m.attr('id')].drawImage(m[0], 0, 0, 960, 768);
-              //  }
-               // else
-                //    context.drawImage(m[0], 0, 0, 960, 768);
-                console.log("count  " + playingCount);
+                canvases[m.attr('id')].fadeTo(500, (playingCount > 1) ? 0.8 : 1);             
+                contexts[m.attr('id')].drawImage(m[0], 0, 0, 960, 768);            
                 drawTimeOuts[m.attr('id')] = setTimeout(draw, 20, media);
             });            
         }        
