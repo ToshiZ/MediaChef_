@@ -9,15 +9,15 @@ jQuery(document).ready(function ($) {
     var page_h = 768;
     var positionTmp;
     var colors = ["#8A2BE2", "#6495ED", "#1E90FF", '#90EE90', '#FF6347', '#FF00FF', '#ADFF2F', '#008000', '#0000FF', '#4169E1', '#FF0000'];
-    //var mouseX;
-    //var mouseY;  
-
+    
     var mediaQueue = [];
     var canvases = [];
     var contexts = [];
     var playingCount;
     var drawTimeOuts = [];
-    var pressed = false;
+    var ctrlPressed = false;
+    var pos = $('#position-div');
+    pos.draggable();
 
     canvas[0].width = page_w;
     canvas[0].height = page_h;
@@ -26,16 +26,12 @@ jQuery(document).ready(function ($) {
 
     $(this).on('keydown', function (e) {
         if (e.ctrlKey) {
-            pressed = true;
+            ctrlPressed = true;
         }
         });    
     $(this).keyup(function (event) {
-        pressed = false;
+        ctrlPressed = false;
     });
-    //$(this).mousemove(function (e) {
-    //    mouseX = e.pageX;
-    //    mouseY = e.pageY;
-    //});
 
     $('video, audio').each(function () {
         $(this).on('loadedmetadata', function () {
@@ -43,7 +39,9 @@ jQuery(document).ready(function ($) {
             $(this).parent('li').attr('data-time-end', dur);           
             var rand = Math.floor(Math.random() * colors.length);
             
-            var newDiv = $('<div class = "time-line droppable">').css({
+            var newDiv = $('<div class = "time-line droppable">')
+                .attr('id', "time-line-1")
+                .css({
                 position: 'relative',
                 bottom: '-20px',
                 left: (270 - parseInt(dur * 12)) / 2 + 'px',
@@ -72,12 +70,6 @@ jQuery(document).ready(function ($) {
                  color: 'white',
                 left: '33%'
              }).appendTo(newDiv);
-
-             //newDiv.mousemove(function(){
-             //    $('#position-div').css({
-             //        top: mouseY + 'px',
-             //        left: mouseX + 'px'
-             //    }).fadeIn('slow');
              });   
     });
 
@@ -128,43 +120,61 @@ jQuery(document).ready(function ($) {
     //    //out: function (event, ui) {        
     //    //}
     //});
-
     //$('li').tooltip({
     //    content: "<p>dasdad</p>",
     //    track: true
-
     //});
-    var pos = $('#position-div');
-    pos.draggable();
+   
+    $("li").on('mouseenter', 'div.time-line', (function () {
+        if (ctrlPressed) {
+            $(this).parent('li').draggable({ disabled: true });
+            $(this).draggable({ axis: 'x' });
+        }
+    }));
+
+    $("li").on('mouseleave', 'div.time-line', (function () {
+        $('#position-div').fadeOut('slow');
+        $(this).parent('li').draggable('enable');
+        $(this).draggable({ disabled: true });
+    }));
+
     $("li").on('mousemove','div.time-line', function(e) {
         var bodyOffsets = document.body.getBoundingClientRect();
-        if (pressed) {
+        if (ctrlPressed) {
             var x = ((e.pageX - $(this).offset().left)/12).toFixed(2);
             pos.css({
                 top:  e.clientY + 30 + 'px',
                 left: e.clientX + 'px'
-            }).fadeIn('slow').text(x);
+            })
+                .fadeIn('slow')
+                .text(x);
         }
-    });
+    });   
 
-    $("li").on('mouseout', 'div.time-line', (function () {
-        $('#position-div').fadeOut('slow');
+    $("li").on('click', 'div.time-line', (function (e) {
+        if (ctrlPressed) {
+            var cutAt = $('#position-div').text();
+            var rand = Math.floor(Math.random()*colors.length);
+            var newDiv = $('<div class = "time-line droppable">')
+                .attr('id', "time-line-2")
+                .css({
+                position: 'absolute',
+                bottom: '-20px',
+                left: $(this).position().left + (parseInt(cutAt * 12)) + 'px',
+                background: colors[rand],
+                opacity: 0.5,
+                width: $(this).width() - (parseInt(cutAt * 12)) + 'px',
+                height: '50px',
+                'border-radius': '10px'
+                })
+                .appendTo($(this).parent('li'));
+            $(this).css({
+                width: (parseInt(cutAt * 12)) + 'px',
+                'border-radius': '10px'
+            });
+        }
     }));
-
-    $("li").on('click', 'div.time-line', (function () {
-
-        $('#position-div').fadeOut('slow');
-    }));
-
-
-    //$('li').click(function (e) {
-    //    event.preventDefault();
-    //  //  if(e.target == )
-    //     console.log('nee');
-    //    if (e.ctrlKey)
-    //        console.log('aga');
-    //});
-
+    
         $('#prewatch-button').click(playByTimer);
 
         function playByTimer() {
