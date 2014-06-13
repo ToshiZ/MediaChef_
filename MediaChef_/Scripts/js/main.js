@@ -1,4 +1,4 @@
-
+jQuery.noConflict();
 jQuery(function ($) {
 
 var BRUSHED = window.BRUSHED || {};
