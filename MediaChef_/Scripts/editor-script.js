@@ -34,14 +34,18 @@ jQuery(document).ready(function ($) {
         ctrlPressed = false;
     });
 
-    $('video, audio').each(function () {
+    $('video, audio, img').each(function () {
+        if ($(this)[0].tagName == 'IMG')
+            var dur = 5;
         $(this).on('loadedmetadata', function () {
-            var dur = $(this)[0].duration;
+            var dur = $(this)[0].duration;    
+        });
             $(this).parent('li').attr('data-time-end', dur);           
             var rand = Math.floor(Math.random() * colors.length);
             
             var newDiv = $('<div class = "time-line droppable">')
                 .attr('id', "1")
+                .attr('data-time', "")
                 .css({
                 position: 'relative',
                 bottom: '-20px',
@@ -71,14 +75,14 @@ jQuery(document).ready(function ($) {
                  color: 'white',
                 left: '33%'
              }).appendTo(newDiv);
-             });   
+             
     });
 
     $('.draggable').each(function () {
         positionTmp = ($(this).offset().left / 12);
         positionTmp = positionTmp.toFixed(2);
         $(this).attr('data-time-start', positionTmp);
-        $(this).find($('div#1 #center-span')).text(positionTmp);
+        $(this).find($('div #center-span')).text(positionTmp);
     });
 
     $('.draggable').draggable({
@@ -88,9 +92,10 @@ jQuery(document).ready(function ($) {
             positionTmp = $(this).offset().left / 12;
             positionTmp = positionTmp.toFixed(2);
             $(this).attr('data-time-start', positionTmp);
-            $(this).find($('div#1 #center-span')).text(positionTmp);
+            $(this).children('div:first').find('#center-span').text(positionTmp);
         }
     });
+   // $('img').parent('li').attr('data-time-start', );
 
     //var asd = 0;
     //$('.droppable').droppable({
@@ -132,12 +137,12 @@ jQuery(document).ready(function ($) {
             $(e.target).draggable({                
                 disabled: false,
                 axis: 'x',
-                //drag: function () {
-                //    positionTmp = $(this).offset().left / 12;
-                //    positionTmp = positionTmp.toFixed(2);
-                //    $(this).attr('data-time-start', positionTmp);
-                //    $(this).find($('div #center-span')).text(positionTmp);
-                //}
+                drag: function () {
+                    positionTmp = $(e.target).offset().left / 12;
+                    positionTmp = positionTmp.toFixed(2);
+                    $(e.target).attr('data-time', positionTmp);
+                    $(e.target).find($('#right-span')).text(positionTmp);
+                }
             });
         }
     }));
@@ -167,6 +172,7 @@ jQuery(document).ready(function ($) {
             var rand = Math.floor(Math.random()*colors.length);
             var newDiv = $('<div class = "time-line droppable">')
                 .attr('id', $(this).parent('li').children('div.time-line').length + 1)
+                .attr('data-time', "")
                 .css({
                 position: 'absolute',
                 bottom: '-20px',
