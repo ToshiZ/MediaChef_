@@ -11,12 +11,25 @@ jQuery(document).ready(function ($) {
     var colors = ["#8A2BE2", "#6495ED", "#1E90FF", '#90EE90', '#FF6347', '#FF00FF', '#ADFF2F', '#008000', '#0000FF', '#4169E1', '#FF0000'];
     
     var mediaQueue = [];
+    var mediaQueue2 = [];
     var canvases = [];
     var contexts = [];
     var playingCount;
     var drawTimeOuts = [];
     var ctrlPressed = false;
     var pos = $('#position-div');
+
+    //var mediaQueueClass = $(Class).create({
+    //    init: function (obj, time) {
+    //        this.obj = obj;
+    //        this.time = time;
+    //    }
+    //});
+
+    function MediaQueueClass(obj, time) {
+        this.obj = obj;
+        this.time = time;
+    }
 
     pos.draggable();
 
@@ -46,6 +59,7 @@ jQuery(document).ready(function ($) {
             var newDiv = $('<div class = "time-line droppable">')
                 .attr('id', "1")
                 .attr('data-time', "")
+                .attr('data-pause', "none")
                 .css({
                 position: 'relative',
                 bottom: '-20px',
@@ -83,6 +97,7 @@ jQuery(document).ready(function ($) {
         positionTmp = positionTmp.toFixed(2);
         $(this).attr('data-time-start', positionTmp);
         $(this).find($('div #center-span')).text(positionTmp);
+        $(this).children('div:first').attr('data-time', positionTmp);
     });
 
     $('.draggable').draggable({
@@ -93,6 +108,7 @@ jQuery(document).ready(function ($) {
             positionTmp = positionTmp.toFixed(2);
             $(this).attr('data-time-start', positionTmp);
             $(this).children('div:first').find('#center-span').text(positionTmp);
+            $(this).children('div:first').attr('data-time', positionTmp);
         }
     });
    // $('img').parent('li').attr('data-time-start', );
@@ -173,6 +189,7 @@ jQuery(document).ready(function ($) {
             var newDiv = $('<div class = "time-line droppable">')
                 .attr('id', $(this).parent('li').children('div.time-line').length + 1)
                 .attr('data-time', "")
+                .attr('data-pause', "none")
                 .css({
                 position: 'absolute',
                 bottom: '-20px',
@@ -195,6 +212,9 @@ jQuery(document).ready(function ($) {
             })
                 .appendTo(newDiv)
             .text(cutAt);
+            var td = (newDiv.offset().left / 12).toFixed(2);
+            newDiv.attr('data-time', td);
+            newDiv.prev('div.time-line').attr('data-pause', td);
         }
     }));
     
@@ -212,23 +232,54 @@ jQuery(document).ready(function ($) {
                 offset = 0,
                 dif = 0;
             playingCount = 0;
-            
+            var arrIter = 0;
             $('video.project-item, audio.project-item, img.project-item').each(function (i) {
-                startTime[i] = $(this).parent('li').attr('data-time-start');                
-                mediaQueue[i] = $(this);
-            });           
-            console.log(startTime);
+                var mediaEl = $(this);
+
+                var divEl = $(this).siblings('div.time-line:first');
+                for (var k = 0; k < $(this).siblings('div.time-line').length; k++) {
+                    var t = divEl.attr('data-time');
+                    var o = mediaEl;
+                    startTime[arrIter] = t;
+                    mediaQueue[arrIter] = new MediaQueueClass(o, t);                    
+                    arrIter++;
+                    var t = divEl.attr('data-pause');
+                    if (t !== undefined && t !== 'none') {
+                        startTime[arrIter] = t;
+                        mediaQueue[arrIter] = new MediaQueueClass(o, t);
+                        arrIter++;
+                     }
+                        divEl = divEl.next();
+                }
+            });
+
+            //for (var i = 0; i < startTime.length; i++) {
+            //    mediaQueue2[i] = new MediaQueueClass(mediaQueue[i], startTime[i]);
+            //}            
             mediaQueue.sort(function (a, b) {
-                if (a.parent('li').attr('data-time-start') > b.parent('li').attr('data-time-start'))
+                if (parseFloat(a.time) > parseFloat(b.time))
                     return 1;
-                if (a.parent('li').attr('data-time-start') < b.parent('li').attr('data-time-start'))
+                if (parseFloat(a.time) < parseFloat(b.time))
+                    return -1;
+                return 0;
+            });          
+            //mediaQueue.sort(function (a, b) {
+            //    if (a.parent('li').attr('data-time-start') > b.parent('li').attr('data-time-start'))
+            //        return 1;
+            //    if (a.parent('li').attr('data-time-start') < b.parent('li').attr('data-time-start'))
+            //        return -1;
+            //    return 0;
+            //});
+            startTime.sort(function (a, b) {
+                if (parseFloat(a) > parseFloat(b))
+                    return 1;
+                if (parseFloat(a) < parseFloat(b))
                     return -1;
                 return 0;
             });
-            startTime.sort();
-            console.log(startTime);
-            startTime.forEach(function (item, i) {                
-                if(item == startTime[i+1])
+           // console.log(startTime);
+            mediaQueue.forEach(function (item, i) {                
+                if(item.time == startTime[i+1])
                 {
                     offset++;
                     return;
@@ -245,64 +296,81 @@ jQuery(document).ready(function ($) {
                     timeOuts[i] = setTimeout(function () {
                         var it;
                         for (it = 0; it < nowPlaying.length; it++) {
-                            if (nowPlaying[it][0].tagName == 'AUDIO') {
-                                nowPlaying[it][0].play();
+                            if (nowPlaying[it].obj[0].tagName == 'AUDIO') {
+                                if (nowPlaying[it].obj[0].paused)
+                                    nowPlaying[it].obj[0].play();
+                                else
+                                    nowPlaying[it].obj[0].pause();
                                 nowPlaying.splice(it--, 1);
+                                // if (nowPlaying.length == 0)
+                                timeCount += item.time * 1000;
+                                    return;
                             }
-                            if (nowPlaying[it][0].tagName == 'VIDEO' || nowPlaying[it][0].tagName == 'IMG') {
+                            if (nowPlaying[it].obj[0].tagName == 'VIDEO' || nowPlaying[it].obj[0].tagName == 'IMG') {
                                 playingCount++;
-                                var mId = nowPlaying[it].attr('id');
+                                var mId = nowPlaying[it].obj.attr('id');
+                                if (!canvases[mId]) {
+                                    canvases[mId] = $('<canvas>').attr({
+                                        id: mId
+                                    }).css({
+                                        width: page_w + 'px',
+                                        height: page_h + 'px',
+                                        position: 'absolute',
+                                        left: '0px'
+                                    }).appendTo('#prewatch')
 
-                                $('<canvas>').attr({
-                                    id: mId
-                                }).css({
-                                    width: page_w + 'px',
-                                    height: page_h + 'px',
-                                    position: 'absolute',
-                                    left: '0px'
-                                }).appendTo('#prewatch')
-
-                                canvases[mId] = $("canvas[id=" + mId + "]");
-                                canvases[mId][0].width = page_w;
-                                canvases[mId][0].height = page_h;
-                                contexts[mId] = canvases[mId][0].getContext('2d');
-                                console.log("1" + nowPlaying);
-                                if (nowPlaying[it][0].tagName == 'IMG') {
+                                     //$("canvas[id=" + mId + "]");
+                                    canvases[mId][0].width = page_w;
+                                    canvases[mId][0].height = page_h;
+                                    contexts[mId] = canvases[mId][0].getContext('2d');
+                                }
+                                //console.log("1" + nowPlaying);
+                                if (nowPlaying[it].obj[0].tagName == 'IMG') {
                                     canvases[mId].fadeTo(500, (playingCount > 1) ? 0.5 : 1);
-                                    contexts[mId].drawImage(nowPlaying[it][0], 0, 0, 960, 768);
+                                    contexts[mId].drawImage(nowPlaying[it].obj[0], 0, 0, 960, 768);
                                     setTimeout(function () {
                                         canvases[mId].detach();
                                         playingCount--;
-                                    },5000);
+                                    }, 5000);
                                     nowPlaying.splice(it--, 1);
                                 }
-                                else
-                                    nowPlaying[it][0].play();
+                                else {
+                                    if (nowPlaying[it].obj[0].paused) {
+                                        nowPlaying[it].obj[0].play();
+                                        canvases[mId].fadeTo(500, (playingCount > 1) ? 0.5 : 1);;
+                                    }
+                                    else {
+                                        nowPlaying[it].obj[0].pause();
+                                        canvases[mId].css({display: 'none'});
+                                    }
+                                }
                             } 
-                            timeCount += item * 1000;
+                            timeCount += item.time * 1000;
                         }
                         console.log("2" + nowPlaying);
                         if(nowPlaying.length!=0)
                             draw(nowPlaying);
-                    }, item * 1000 - dif - timeCount);                    
+                    }, item.time * 1000 - dif - timeCount);                    
                 }
             });
         }
             
         function draw(media) {         
-            if (media[0][0].paused || media[0][0].ended) {
+            if (media[0].obj[0].ended) {
                 media.forEach(function (m) {
-                    clearTimeout(drawTimeOuts[m.attr('id')]);
-                    canvases[m.attr('id')].detach();
+                    clearTimeout(drawTimeOuts[m.obj.attr('id')]);
+                    canvases[m.obj.attr('id')].detach();
                     playingCount--;
                     });    
                 return false;
             }
             media.forEach(function (m, it) {
-                console.log(playingCount);
-                canvases[m.attr('id')].fadeTo(500, (playingCount > 1) ? 0.5 : 1);
-                contexts[m.attr('id')].drawImage(m[0], 0, 0, 960, 768);            
-                drawTimeOuts[m.attr('id')] = setTimeout(draw, 20, media);
+                // console.log(playingCount);
+                if (!m.obj[0].paused)
+                //    canvases[m.obj.attr('id')].css({display: 'none'});
+                canvases[m.obj.attr('id')].fadeTo(500, (playingCount > 1) ? 0.5 : 1);
+                contexts[m.obj.attr('id')].drawImage(m.obj[0], 0, 0, 960, 768);
+                drawTimeOuts[m.obj.attr('id')] = setTimeout(draw, 20, media);
             });            
         }        
     });    
