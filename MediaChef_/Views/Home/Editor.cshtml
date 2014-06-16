@@ -134,34 +134,14 @@
     </div>
     <a id="prewatch-button" class="button button-large" href="#prewatch">Просмотр</a>
     <p id="test"></p>
-    @*style="position: relative;"*@
-    <div id="prewatch" class="page-alternate" style="position: relative; height: 900px">
-      
-        @*<div class="container">*@
-        <!-- Title Page -->
-        @*<div class="row">
-                <div class="span12">
-                    <div class="title-page">
-                        <h2 class="title">Get in Touch</h2>
-                        <h3 class="title-description">We’re currently accepting new client projects. We look forward to serving you.</h3>
-                    </div>
-                </div>
-            </div>*@
-        <!-- End Title Page -->
-        <!-- Contact Form -->
-        @*<div class="row">*@
-        @*<div class="span9">*@
-        @*style=" position: absolute; top: 20px; left: 20px"*@
-        <canvas id="canvas-prewatch" class="canvas" style=" position: absolute; left: 0px"></canvas>
-        @*</div>
-            
-
-
-            </div>*@
-        <!-- End Contact Form -->
-        @*</div>*@
+    
+    <div id="prewatch" class="page-alternate" style="position: relative; height: 900px">      
+       
+        @*<canvas id="canvas-prewatch" class="canvas" style=" position: absolute; left: 0px"></canvas>*@
+        <div style="width: 960px; height: 768px; display: none"></div>
+       
     </div>
-    <!-- End Contact Section -->
+    
     <!-- UPLOAD-->
     @{ Html.RenderPartial("UploadWidget"); }
 

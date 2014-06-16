@@ -1,17 +1,11 @@
 jQuery.noConflict();
-jQuery(document).ready(function ($) {    
-    var video = $('video').get(0);
-    var canvas = $("#canvas-prewatch");
-    var context = canvas[0].getContext('2d');
-    var wpage_h = $(window).height()*0.5;
-    var wpage_w = $(window).width()* 0.5;
+jQuery(document).ready(function ($) {  
     var page_w = 960;
     var page_h = 768;
     var positionTmp;
     var colors = ["#8A2BE2", "#6495ED", "#1E90FF", '#90EE90', '#FF6347', '#FF00FF', '#ADFF2F', '#008000', '#0000FF', '#4169E1', '#FF0000'];
     
     var mediaQueue = [];
-    var mediaQueue2 = [];
     var canvases = [];
     var contexts = [];
     var playingCount;
@@ -19,24 +13,12 @@ jQuery(document).ready(function ($) {
     var ctrlPressed = false;
     var pos = $('#position-div');
 
-    //var mediaQueueClass = $(Class).create({
-    //    init: function (obj, time) {
-    //        this.obj = obj;
-    //        this.time = time;
-    //    }
-    //});
-
     function MediaQueueClass(obj, time) {
         this.obj = obj;
         this.time = time;
     }
 
-    pos.draggable();
-
-    canvas[0].width = page_w;
-    canvas[0].height = page_h;
-    canvas.css("width", page_w);
-    canvas.css("height", page_h);
+    pos.draggable();  
 
     $(this).on('keydown', function (e) {
         if (e.ctrlKey) {
@@ -46,13 +28,8 @@ jQuery(document).ready(function ($) {
     $(this).keyup(function (event) {
         ctrlPressed = false;
     });
-
-    $('video, audio, img').each(function () {
-        if ($(this)[0].tagName == 'IMG')
-            var dur = 5;
-        $(this).on('loadedmetadata', function () {
-            var dur = $(this)[0].duration;    
-        });
+   $('video, audio, img').each(function () {        
+            var dur = 5;      
             $(this).parent('li').attr('data-time-end', dur);           
             var rand = Math.floor(Math.random() * colors.length);
             
@@ -89,64 +66,36 @@ jQuery(document).ready(function ($) {
                  color: 'white',
                 left: '33%'
              }).appendTo(newDiv);
-             
-    });
+             if ($(this)[0].tagName != 'IMG')
+                 $(this).on('loadedmetadata', function () {
+                     var dur = $(this)[0].duration;
+                     newDiv.css({
+                         left: (270 - parseInt(dur * 12)) / 2 + 'px',
+                         width: (parseInt(dur * 12)) + 'px'
+                     });
+                 });             
+   });
 
-    $('.draggable').each(function () {
-        positionTmp = ($(this).offset().left / 12);
-        positionTmp = positionTmp.toFixed(2);
-        $(this).attr('data-time-start', positionTmp);
-        $(this).find($('div #center-span')).text(positionTmp);
-        $(this).children('div:first').attr('data-time', positionTmp);
-    });
+   $('.draggable').each(function () {
+       positionTmp = ($(this).children('div.time-line:first').offset().left / 12);
+       positionTmp = positionTmp.toFixed(2);
+      // $(this).attr('data-time-start', positionTmp);
+       $(this).find($('div.time-line #center-span')).text(positionTmp);
+       $(this).children('div.time-line:first').attr('data-time', positionTmp);
+   });
 
     $('.draggable').draggable({
         scroll: false,
         stack: '.draggable',
         drag: function () {
-            positionTmp = $(this).offset().left / 12;
+            positionTmp = $(this).children('div.time-line:first').offset().left / 12;
             positionTmp = positionTmp.toFixed(2);
-            $(this).attr('data-time-start', positionTmp);
-            $(this).children('div:first').find('#center-span').text(positionTmp);
-            $(this).children('div:first').attr('data-time', positionTmp);
+           // $(this).attr('data-time-start', positionTmp);
+            $(this).children('div.time-line:first').find('#center-span').text(positionTmp);
+            $(this).children('div.time-line:first').attr('data-time', positionTmp);
         }
     });
-   // $('img').parent('li').attr('data-time-start', );
-
-    //var asd = 0;
-    //$('.droppable').droppable({
-    //    over: function(event, ui)
-    //    {
-    //        console.log(asd++);
-    //    }
-    //    //drop: function (event, ui) {
-
-    //    //},
-    //    //over: function (event, ui) {
-    //    //    var draggableElement = ui.draggable;                     
-    //    //    var mergeT;            
-
-    //    //    if (draggableElement.data('time-start') > $(this).data('time-start')) {
-    //    //        //alert('1');
-    //    //        mergeT = $(this).data('time-end') * 12 + $(this).data('time-start') - draggableElement.data('time-start');
-    //    //       // alert('2');
-    //    //    }
-    //    //    else {
-    //    //       // alert('3');
-    //    //        mergeT = draggableElement.data('time-end') * 12 + draggableElement.data('time-start') - $(this).data('time-start');
-    //    //       // alert('4');
-    //    //    }
-    //    //    draggableElement.find('.merge-time').text(mergeT);
-    //    //    //alert('5');
-    //    //},
-    //    //out: function (event, ui) {        
-    //    //}
-    //});
-    //$('li').tooltip({
-    //    content: "<p>dasdad</p>",
-    //    track: true
-    //});
-   
+           
     $("li").on('mouseenter', 'div.time-line', (function (e) {
         if (ctrlPressed) {
             $(this).parent('li').draggable({ disabled: true });
@@ -252,24 +201,15 @@ jQuery(document).ready(function ($) {
                         divEl = divEl.next();
                 }
             });
-
-            //for (var i = 0; i < startTime.length; i++) {
-            //    mediaQueue2[i] = new MediaQueueClass(mediaQueue[i], startTime[i]);
-            //}            
+ 
             mediaQueue.sort(function (a, b) {
                 if (parseFloat(a.time) > parseFloat(b.time))
                     return 1;
                 if (parseFloat(a.time) < parseFloat(b.time))
                     return -1;
                 return 0;
-            });          
-            //mediaQueue.sort(function (a, b) {
-            //    if (a.parent('li').attr('data-time-start') > b.parent('li').attr('data-time-start'))
-            //        return 1;
-            //    if (a.parent('li').attr('data-time-start') < b.parent('li').attr('data-time-start'))
-            //        return -1;
-            //    return 0;
-            //});
+            });        
+           
             startTime.sort(function (a, b) {
                 if (parseFloat(a) > parseFloat(b))
                     return 1;
@@ -277,7 +217,7 @@ jQuery(document).ready(function ($) {
                     return -1;
                 return 0;
             });
-           // console.log(startTime);
+
             mediaQueue.forEach(function (item, i) {                
                 if(item.time == startTime[i+1])
                 {
@@ -302,12 +242,11 @@ jQuery(document).ready(function ($) {
                                 else
                                     nowPlaying[it].obj[0].pause();
                                 nowPlaying.splice(it--, 1);
-                                // if (nowPlaying.length == 0)
                                 timeCount += item.time * 1000;
                                     return;
                             }
                             if (nowPlaying[it].obj[0].tagName == 'VIDEO' || nowPlaying[it].obj[0].tagName == 'IMG') {
-                                playingCount++;
+                                
                                 var mId = nowPlaying[it].obj.attr('id');
                                 if (!canvases[mId]) {
                                     canvases[mId] = $('<canvas>').attr({
@@ -318,36 +257,35 @@ jQuery(document).ready(function ($) {
                                         position: 'absolute',
                                         left: '0px'
                                     }).appendTo('#prewatch')
-
-                                     //$("canvas[id=" + mId + "]");
                                     canvases[mId][0].width = page_w;
                                     canvases[mId][0].height = page_h;
                                     contexts[mId] = canvases[mId][0].getContext('2d');
                                 }
-                                //console.log("1" + nowPlaying);
                                 if (nowPlaying[it].obj[0].tagName == 'IMG') {
+                                    playingCount++;
                                     canvases[mId].fadeTo(500, (playingCount > 1) ? 0.5 : 1);
                                     contexts[mId].drawImage(nowPlaying[it].obj[0], 0, 0, 960, 768);
+
                                     setTimeout(function () {
                                         canvases[mId].detach();
                                         playingCount--;
                                     }, 5000);
                                     nowPlaying.splice(it--, 1);
                                 }
-                                else {
+                                else 
                                     if (nowPlaying[it].obj[0].paused) {
+                                        playingCount++;
                                         nowPlaying[it].obj[0].play();
                                         canvases[mId].fadeTo(500, (playingCount > 1) ? 0.5 : 1);;
                                     }
                                     else {
+                                        playingCount--;
                                         nowPlaying[it].obj[0].pause();
                                         canvases[mId].css({display: 'none'});
-                                    }
-                                }
+                                    }                                
                             } 
                             timeCount += item.time * 1000;
                         }
-                        console.log("2" + nowPlaying);
                         if(nowPlaying.length!=0)
                             draw(nowPlaying);
                     }, item.time * 1000 - dif - timeCount);                    
@@ -365,10 +303,8 @@ jQuery(document).ready(function ($) {
                 return false;
             }
             media.forEach(function (m, it) {
-                // console.log(playingCount);
                 if (!m.obj[0].paused)
-                //    canvases[m.obj.attr('id')].css({display: 'none'});
-                canvases[m.obj.attr('id')].fadeTo(500, (playingCount > 1) ? 0.5 : 1);
+                    canvases[m.obj.attr('id')].fadeTo(500, (playingCount > 1) ? 0.5 : 1);
                 contexts[m.obj.attr('id')].drawImage(m.obj[0], 0, 0, 960, 768);
                 drawTimeOuts[m.obj.attr('id')] = setTimeout(draw, 20, media);
             });            
