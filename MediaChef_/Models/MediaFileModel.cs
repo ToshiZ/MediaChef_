@@ -7,7 +7,7 @@ using System.Linq;
 using System.Web;
 
 namespace MediaChef_.Models
-{      
+{      //Модель сущности MediaFile
         public class MediaFileModel
         {
             // ID медиа файла
@@ -26,9 +26,9 @@ namespace MediaChef_.Models
             public DateTime DateAdded { get; set; }
             // дата изменения
             public DateTime DateModify { get; set; }
-            // пользователь - FK
+            // имя пользователя
             public string UserName { get; set; }
-            // тип
+            // атрибуты
             public string Attributes { get; set; }
 
 
