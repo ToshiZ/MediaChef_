@@ -22,7 +22,6 @@
             <source src="@b.Path" type="@b.TypeMime" />
             Your browser does not support the video tag.
         </video>
-        @* <img src="~/Images/img/work/thumbs/image-08.jpg" alt="Video">*@
     </li>
                             <!-- End Item Project -->
                     break;
@@ -33,9 +32,6 @@
     <li class="item-thumbs span3 photography draggable " style="overflow: visible" data-time-start="" data-time-end="">
         <!-- Fancybox - Gallery Enabled - Title - Full Image -->
         <a class="hover-wrap fancybox" data-fancybox-group="gallery" title="@b.Name" href="~/@b.Path">
-            @*<span class="overlay-img"></span>*@
-
-            @*<span class="overlay-img-thumb font-icon-plus"></span>*@
             <span class="time-counter"></span><br>
             <span class="merge-time"></span>
         </a>
@@ -53,22 +49,15 @@
 
         <!-- Fancybox - Gallery Enabled - Title - Full Image -->
         <a class="hover-wrap fancybox" data-fancybox-group="gallery" title="@b.Name" href="~/@b.Path">
-            @*<span class="overlay-img"></span>*@
-            @* <span class="overlay-img-thumb font-icon-plus"></span>*@
             @b.Name
             <span class="time-counter"></span><br>
             <span class="merge-time"></span>
         </a>
         <!-- Thumb Image and Description -->
-        @*<a href="~/@b.Path">@b.Name</a>*@
-        @*<img style="width: 500px; height:270px" src="~/Images/img/work/thumbs/image-02.jpg" title="@b.Name">*@
-
         <audio id="@b.GetHashCode()" class="project-item" controls="controls" preload="metadata">
             <source src="@b.Path" type="@b.TypeMime" />
         </audio>
-        @*<div style="background: white; height: 100px; width: 500px">sdfsdf</div>*@
     </li>
-
                             <!-- End Item Project -->
                     break;
                 }
