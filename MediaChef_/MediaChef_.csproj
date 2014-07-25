@@ -277,6 +277,7 @@
     <Content Include="Content\css\fonts\Icons.eot" />
     <Content Include="Content\css\fonts\Icons.ttf" />
     <Content Include="Content\css\fonts\Icons.woff" />
+    <None Include="Properties\PublishProfiles\MediaChef.pubxml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\editor-script.js" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />

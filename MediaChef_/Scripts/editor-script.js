@@ -201,8 +201,14 @@ jQuery(document).ready(function ($) {               //запуск скрипта editor-scri
                 real,                           //время, непосредственно перед установкой таймера
                 dif = 0,                        //временная погрешность
                 offset = 0,                     //количество одновременно запускаемых медиафайлов
-                playingCount = 0,
+                
                 arrIter = 0;                    //итератор цикла заполнения очереди медиа-объектов
+            playingCount = 0;
+            var timeSpan = $('#test');
+            setInterval(function () {
+                var t = (( new Date().getTime() - start ) / 1000).toFixed(2);
+                timeSpan.text(t);
+            }, 70);
             //проход по всем медиа-объектам страницы
             $('video.project-item, audio.project-item, img.project-item').each(function (i) {
                 var mediaEl = $(this);      //выбранный медиа-объект
@@ -278,8 +284,11 @@ jQuery(document).ready(function ($) {               //запуск скрипта editor-scri
                                     contexts[mId] = canvases[mId][0].getContext('2d');
                                 }
                                 if (nowPlaying[it].obj[0].tagName == 'IMG') {                   //отрисовка изображения img
+                                    console.log(playingCount);
                                     playingCount++;
+                                    console.log(playingCount);
                                     canvases[mId].fadeTo(500, (playingCount > 1) ? 0.5 : 1);   //установка прозрачности 0.5 или 1
+                                    console.log(playingCount);
                                     //если воспроизводится >1 или =<1 медиа-объектов                                         
                                     contexts[mId].drawImage(nowPlaying[it].obj[0], 0, 0, 960, 768); //отрисовка изображения на Canvas
                                     setTimeout(function () {        //установка таймера отмены отрисовки
@@ -292,7 +301,7 @@ jQuery(document).ready(function ($) {               //запуск скрипта editor-scri
                                     if (nowPlaying[it].obj[0].paused) {     //запуск/пауза объекта video
                                         playingCount++;
                                         nowPlaying[it].obj[0].play();
-                                        canvases[mId].fadeTo(500, (playingCount > 1) ? 0.5 : 1);;
+                                        canvases[mId].fadeTo(500, (playingCount > 1) ? 0.5 : 1);
                                     }
                                     else {
                                         playingCount--;
@@ -329,9 +338,15 @@ jQuery(document).ready(function ($) {               //запуск скрипта editor-scri
                 return false;
             }
             media.forEach(function (m, it) {    
-                if (!m.obj[0].paused)
-                    canvases[m.obj.attr('id')].fadeTo(500, (playingCount > 1) ? 0.5 : 1);
-                contexts[m.obj.attr('id')].drawImage(m.obj[0], 0, 0, 960, 768); //отрисовка изображения на Canvas
+                if (!m.obj[0].paused) {
+                    //canvases[m.obj.attr('id')].fadeTo(500, (playingCount > 1) ? 0.5 : 1);
+                    if (playingCount > 1)
+                        canvases[m.obj.attr('id')].css({ opacity: 0.5 });
+                    else
+                        canvases[m.obj.attr('id')].css({ opacity: 1 });
+                   // console.log(playingCount);
+                    contexts[m.obj.attr('id')].drawImage(m.obj[0], 0, 0, 960, 768);
+                }//отрисовка изображения на Canvas
                 drawTimeOuts[m.obj.attr('id')] = setTimeout(draw, 20, media);   //установка таймера вызова функции draw на 20мс
             });            
         }        

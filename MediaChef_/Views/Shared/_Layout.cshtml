@@ -172,7 +172,7 @@
         </div>
     }
     <!-- End Contact Section -->
-    @if (Request.IsAuthenticated)
+    @if (User.IsInRole("Admin") || User.IsInRole("User"))
     { 
         {Html.RenderPartial("UploadWidget");}
     }
